@@ -4,6 +4,13 @@ export interface Actions {
   handler: Function;
   className?: string;
 }
+export interface IndividualActions {
+  key: string;
+  list: Array<ListItem>
+  label?: string;
+  handler: Function;
+  className?: string;
+}
 export interface Column {
   name: string;
   selector: string;
@@ -19,6 +26,7 @@ export default interface Props {
   columns: Array<Column>;
   list: Array<ListItem>;
   actions?: Array<Actions>;
+  individualActions?: Array<IndividualActions>;
   title?: string;
   pagination?: boolean;
   containerClass?: string;

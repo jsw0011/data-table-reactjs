@@ -66,11 +66,6 @@ const Table: React.FunctionComponent<Props> = (props) => {
     setListInState(currentList);
   }, [pageNumber, pageSize, list]);
   let startPage = 1;
-  if (pageNumber > totalPageNumber - 5) {
-    startPage = totalPageNumber - 9;
-  } else if (pageNumber > 5) {
-    startPage = pageNumber - 4;
-  }
   return (
     <div className={`react-data-table-component-container ${props.containerClass || ""}`}>
       {(props.showDownloadOption || props.title) && (
@@ -183,6 +178,9 @@ const Table: React.FunctionComponent<Props> = (props) => {
               {!!props.actions?.length && (
                 <th className={`react-data-table-header-cell ${props.headerCellClass || ""}`}>Actions</th>
               )}
+              {!!props.individualActions?.length && (
+                  <th className={`react-data-table-header-cell ${props.headerCellClass || ""}`}></th>
+              )}
             </tr>
           </thead>
           <tbody className={`react-data-table-body ${props.tableBodyClassName || ""}`}>
@@ -215,6 +213,15 @@ const Table: React.FunctionComponent<Props> = (props) => {
                     ))}
                   </td>
                 )}
+                {props.individualActions?.length && (
+                    <td className={`react-data-table-cell ${props.tableCellClass || ""}`}>
+                      {props.individualActions.map((individualAction) => (
+                          individualAction.list.includes(obj) && (
+                              <span>{individualAction.label}<br/></span>
+                          )
+                          ))}
+                    </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -223,8 +230,8 @@ const Table: React.FunctionComponent<Props> = (props) => {
       {props.pagination && (
         <div className={`react-data-table-footer ${props.tableFooterClass || ""}`}>
           <div className="react-data-table-footer-info">
-            <h4>Total Entries: {totalEntry}</h4>
-            <h4>Total pages: {totalPageNumber}</h4>
+            {/*<h4>Total Entries: {totalEntry}</h4>
+            <h4>Total pages: {totalPageNumber}</h4>*/}
           </div>
           <div className="react-data-table-footer-link-section">
             <div className={`${props.pageSizeDropDownContainerClass || ""}`}>
@@ -254,7 +261,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
                 Prev
               </span>
 
-              {Array(10)
+              {Array(totalPageNumber)
                 .fill(0)
                 .map((_, i) => {
                   console.log({ pageNumber, startPage, i, "startPage + i": startPage + i, totalPageNumber });
