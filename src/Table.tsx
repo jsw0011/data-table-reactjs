@@ -213,13 +213,18 @@ const Table: React.FunctionComponent<Props> = (props) => {
                     ))}
                   </td>
                 )}
-                {props.individualActions?.length && (
+                {props.individualActions?.length && props.individualActions.filter(e => e.list.includes(obj)).length > 0 && (
                     <td className={`react-data-table-cell ${props.tableCellClass || ""}`}>
-                      {props.individualActions.map((individualAction) => (
-                          individualAction.list.includes(obj) && (
-                              <span>{individualAction.label}<br/></span>
-                          )
+                      <div className={"individual-actions-dropdown"}>
+                        <button>Additional actions</button>
+                        <div className={"individual-actions-dropdown-content"}>
+                          {props.individualActions.map((individualAction) => (
+                              individualAction.list.includes(obj) && (
+                                  <span className={"t-underLine c-pointer"} onClick={() => individualAction.handler(index, obj)}>{individualAction.label}<br/></span>
+                              )
                           ))}
+                        </div>
+                      </div>
                     </td>
                 )}
               </tr>
