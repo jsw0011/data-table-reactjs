@@ -203,24 +203,24 @@ const Table: React.FunctionComponent<Props> = (props) => {
                 {props.actions?.length && (
                   <td className={`react-data-table-cell ${props.tableCellClass || ""}`}>
                     {props.actions?.map((item) => (
-                      <span
+                      <a
                         onClick={() => item.handler(index, obj)}
                         key={item.key}
-                        className={`t-underLine c-pointer ${item.className || ""} ${props.actionsClass || ""}`}
+                        className={`c-pointer ${item.className || ""} ${props.actionsClass || ""}`}
                       >
                         {item.label}
-                      </span>
+                      </a>
                     ))}
                   </td>
                 )}
-                {props.individualActions?.length && props.individualActions.filter(e => e.list.includes(obj)).length > 0 && (
+                {props.individualActions?.length && props.individualActions.filter(e => e.list.some(el => el === obj)).length > 0 && (
                     <td className={`react-data-table-cell ${props.tableCellClass || ""}`}>
-                      <div className={"individual-actions-dropdown"}>
-                        <button>Additional actions</button>
-                        <div className={"individual-actions-dropdown-content"}>
+                      <div className={"dropdown"}>
+                        <a className={"c-pointer dropdown-toggle"} data-toggle={"dropdown"} aria-haspopup={"true"} aria-expanded={"false"}>...</a>
+                        <div className={"dropdown-menu"} aria-labelledby={"dropdownMenuButton"}>
                           {props.individualActions.map((individualAction) => (
-                              individualAction.list.includes(obj) && (
-                                  <span className={"t-underLine c-pointer"} onClick={() => individualAction.handler(index, obj)}>{individualAction.label}<br/></span>
+                              individualAction.list.some(el => el === obj) && (
+                                  <a className={"dropdown-item"} onClick={() => individualAction.handler(index, obj)}>{individualAction.label}<br/></a>
                               )
                           ))}
                         </div>
