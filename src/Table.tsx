@@ -43,7 +43,6 @@ const IndividualActions: React.FunctionComponent<IndividualActionsProps> = (prop
   ) 
   : []
 
-  console.log('enabledList', enabledList)
   return (
     <td className={`react-data-table-individual-action-cell react-data-table-cell ${props.tableCellClass || ""}`}>
       <div className={"react-data-table-individual-action"}>
