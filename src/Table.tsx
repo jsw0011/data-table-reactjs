@@ -8,6 +8,7 @@ import { export2File, filterList, sortList } from "./tabel.helper";
 import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
+import _ from "lodash";
 
 const MenuIcon = () => (
   <svg
@@ -131,9 +132,19 @@ const Table: React.FunctionComponent<Props> = (props) => {
   };
 
   useEffect(() => {
+    // check for changes in input props 
+    if (!_.isEqual(props.list, list)) { // TODO: optimize comparison
+      setList([...props.list])
+    }
+  }
+  )
+
+  useEffect(() => {
     const currentList = [...list];
     setListInState(currentList);
+    
   }, [pageNumber, pageSize, list]);
+
   let startPage = 1;
   return (
     <div className={`react-data-table-component-container ${props.containerClass || ""}`}>
