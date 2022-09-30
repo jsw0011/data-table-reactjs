@@ -152,6 +152,33 @@
   margin: 0px 3px;
 }
 
+.react-data-table-cell.react-data-table-action-cell, .react-data-table-cell.react-data-table-individual-action-cell {
+  min-width: 5rem;
+  width: max-content;
+}
+
+.react-data-table-individual-action .show-actions {
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+
+.react-data-table-individual-action-list {
+  display: none;
+  padding: .3rem;
+}
+
+.list-wrap-individual-action {
+  color: black;
+}
+
+.btn.btn-link.react-data-table-menu-button {
+  border: .25em solid rgba(255, 255, 255, 0);
+}
+
+.btn.btn-link.react-data-table-menu-button:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
 .react-data-table-footer {
   font-size: 13px;
   font-weight: normal;

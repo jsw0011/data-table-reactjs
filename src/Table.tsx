@@ -1,9 +1,71 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { ChangeEvent, useEffect, useState } from "react";
-import Props, { ListItem } from "./types";
+import Props, { IndividualActionsProps, ListItem } from "./types";
 import "./table.css";
 import { funnelIcon, sortUpIcon, sortDownIcon } from "./icon";
 import { export2File, filterList, sortList } from "./tabel.helper";
+
+import { Menu, MenuItem, MenuButton } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
+import '@szhsin/react-menu/dist/transitions/slide.css';
+
+const MenuIcon = () => (
+  <svg
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M2 6C2 5.44772 2.44772 5 3 5H21C21.5523 5 22 5.44772 22 6C22 6.55228 21.5523 7 21 7H3C2.44772 7 2 6.55228 2 6Z"
+    fill="currentColor"
+  />
+  <path
+    d="M2 12.0322C2 11.4799 2.44772 11.0322 3 11.0322H21C21.5523 11.0322 22 11.4799 22 12.0322C22 12.5845 21.5523 13.0322 21 13.0322H3C2.44772 13.0322 2 12.5845 2 12.0322Z"
+    fill="currentColor"
+  />
+  <path
+    d="M3 17.0645C2.44772 17.0645 2 17.5122 2 18.0645C2 18.6167 2.44772 19.0645 3 19.0645H21C21.5523 19.0645 22 18.6167 22 18.0645C22 17.5122 21.5523 17.0645 21 17.0645H3Z"
+    fill="currentColor"
+  />
+</svg>
+)
+
+const IndividualActions: React.FunctionComponent<IndividualActionsProps> = (props) => {
+  // const [displayActions, setDisplayActions] = useState(false);
+
+  const enabledList: Array<boolean> = props.individualActions ? props.individualActions
+  .map(e => e.enabled === undefined ? true : (
+    e.enabled(props.itemIDselector ? props.obj[props.itemIDselector] : null
+      )
+    )
+  ) 
+  : []
+  return props.individualActions && enabledList?.length > 0 ? (
+    <td className={`react-data-table-individual-action-cell react-data-table-cell ${props.tableCellClass || ""}`}>
+      <div className={"react-data-table-individual-action"}>
+      
+      <Menu menuButton={<MenuButton className="react-data-table-menu-button btn btn-link"><MenuIcon /></MenuButton>} transition>      
+            {props.individualActions.map((individualAction, i) => (
+                enabledList[i] && (
+                    <MenuItem
+                    className="list-wrap-individual-action"
+                    key={i+"event"}
+                    onClick={() => individualAction.handler(props.index, props.obj)}
+                    >
+                      {individualAction.label}
+                    </MenuItem>
+                )
+            ))}
+          </Menu>
+      </div>
+    </td>
+  ) : null
+}
+
+
+
 const Table: React.FunctionComponent<Props> = (props) => {
   const [pageSize, setPageSize] = useState(20);
   const [pageNumber, setPageNumber] = useState(1);
@@ -103,7 +165,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
                   S.No.
                 </th>
               )}
-              {props.columns.map((item, index) => (
+              {props.columns.filter((i)=>!i.omit).map((item, index) => (
                 <th
                   key={index}
                   className={`react-data-table-header-cell ${props.headerCellClass || ""}`}
@@ -191,7 +253,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
                     {pageNumber > 1 ? (pageNumber - 1) * pageSize + index + 1 : index + 1}
                   </td>
                 )}
-                {props.columns.map((item) => (
+                {props.columns.filter((i)=>!i.omit).map((item) => (
                   <td
                     className={`react-data-table-cell ${props.tableCellClass || ""}`}
                     key={item.selector + index}
@@ -200,12 +262,13 @@ const Table: React.FunctionComponent<Props> = (props) => {
                     {obj[item.selector]}
                   </td>
                 ))}
-                {props.actions?.length && (
-                  <td className={`react-data-table-cell ${props.tableCellClass || ""}`}>
-                    {props.actions?.map((item) => (
+                {props.actions && (
+                  <td className={`react-data-table-action-cell react-data-table-cell ${props.tableCellClass || ""}`}>
+                    {props.actions.map((item) => (
                       <a
                         onClick={() => item.handler(index, obj)}
                         key={item.key}
+                        role="button"
                         className={`c-pointer ${item.className || ""} ${props.actionsClass || ""}`}
                       >
                         {item.label}
@@ -213,20 +276,13 @@ const Table: React.FunctionComponent<Props> = (props) => {
                     ))}
                   </td>
                 )}
-                {props.individualActions?.length && props.individualActions.filter(e => e.list.some(el => el === obj)).length > 0 && (
-                    <td className={`react-data-table-cell ${props.tableCellClass || ""}`}>
-                      <div className={"dropdown"}>
-                        <a className={"c-pointer dropdown-toggle"} data-toggle={"dropdown"} aria-haspopup={"true"} aria-expanded={"false"}>...</a>
-                        <div className={"dropdown-menu"} aria-labelledby={"dropdownMenuButton"}>
-                          {props.individualActions.map((individualAction) => (
-                              individualAction.list.some(el => el === obj) && (
-                                  <a className={"dropdown-item"} onClick={() => individualAction.handler(index, obj)}>{individualAction.label}<br/></a>
-                              )
-                          ))}
-                        </div>
-                      </div>
-                    </td>
-                )}
+                 <IndividualActions 
+                  obj={obj} // items
+                  index={index} 
+                  individualActions={props.individualActions} 
+                  tableCellClass={props.tableCellClass}
+                  itemIDselector={props.itemIDselector}
+                  />
               </tr>
             ))}
           </tbody>
@@ -235,8 +291,12 @@ const Table: React.FunctionComponent<Props> = (props) => {
       {props.pagination && (
         <div className={`react-data-table-footer ${props.tableFooterClass || ""}`}>
           <div className="react-data-table-footer-info">
-            {/*<h4>Total Entries: {totalEntry}</h4>
-            <h4>Total pages: {totalPageNumber}</h4>*/}
+            {props.showPageStats && (
+            <>
+              <h4>Total Entries: {totalEntry}</h4>
+              <h4>Total pages: {totalPageNumber}</h4>
+            </>
+            )}
           </div>
           <div className="react-data-table-footer-link-section">
             <div className={`${props.pageSizeDropDownContainerClass || ""}`}>
@@ -269,7 +329,6 @@ const Table: React.FunctionComponent<Props> = (props) => {
               {Array(totalPageNumber)
                 .fill(0)
                 .map((_, i) => {
-                  console.log({ pageNumber, startPage, i, "startPage + i": startPage + i, totalPageNumber });
                   return (
                     <span
                       className={`react-data-table-footer-link c-pointer ${

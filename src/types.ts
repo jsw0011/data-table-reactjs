@@ -4,9 +4,21 @@ export interface Actions {
   handler: Function;
   className?: string;
 }
+
+
+export type IndividualActionEnable = (itemID: any) => boolean
+
+export interface IndividualActionsProps {
+  individualActions?: Array<IndividualActions>;
+  obj: ListItem;
+  tableCellClass?: string;
+  itemIDselector?: string;
+  index: number;
+}
+
 export interface IndividualActions {
   key: string;
-  list: Array<ListItem>
+  enabled?: IndividualActionEnable; // function accepts item ID if itemIDselector is passed
   label?: string;
   handler: Function;
   className?: string;
@@ -54,4 +66,6 @@ export default interface Props {
   activePageCellClass?: string;
   showSerialNumber?: boolean;
   showDownloadOption?: boolean;
+  showPageStats?: boolean;
+  itemIDselector?: string
 }
