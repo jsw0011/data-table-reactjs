@@ -136,7 +136,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
     if (!_.isEqual(props.list, list)) { // TODO: optimize comparison
       setList([...props.list])
     }
-  }
+  },[props.list]
   )
 
   useEffect(() => {
