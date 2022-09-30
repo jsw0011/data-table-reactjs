@@ -42,12 +42,20 @@ const IndividualActions: React.FunctionComponent<IndividualActionsProps> = (prop
     )
   ) 
   : []
-  return props.individualActions && enabledList?.length > 0 ? (
+
+  console.log('enabledList', enabledList)
+  return (
     <td className={`react-data-table-individual-action-cell react-data-table-cell ${props.tableCellClass || ""}`}>
       <div className={"react-data-table-individual-action"}>
       
-      <Menu menuButton={<MenuButton className="react-data-table-menu-button btn btn-link"><MenuIcon /></MenuButton>} transition>      
-            {props.individualActions.map((individualAction, i) => (
+      {enabledList?.filter(i=>i===true).length > 0 && <Menu 
+      menuButton={<MenuButton 
+              className="react-data-table-menu-button btn btn-link"
+            ><MenuIcon />
+          </MenuButton>} 
+      transition
+      >      
+            {props.individualActions?.map((individualAction, i) => (
                 enabledList[i] && (
                     <MenuItem
                     className="list-wrap-individual-action"
@@ -58,10 +66,10 @@ const IndividualActions: React.FunctionComponent<IndividualActionsProps> = (prop
                     </MenuItem>
                 )
             ))}
-          </Menu>
+          </Menu>}
       </div>
     </td>
-  ) : null
+  )
 }
 
 

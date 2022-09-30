@@ -152,7 +152,7 @@
   margin: 0px 3px;
 }
 
-.react-data-table-cell.react-data-table-action-cell, .react-data-table-cell.react-data-table-individual-action-cell {
+.react-data-table-cell.react-data-table-action-cell {
   min-width: 5rem;
   width: max-content;
 }
@@ -162,10 +162,10 @@
   font-weight: 400;
 }
 
-.react-data-table-individual-action-list {
+/* .react-data-table-individual-action-list {
   display: none;
   padding: .3rem;
-}
+} */
 
 .list-wrap-individual-action {
   color: black;
