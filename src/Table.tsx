@@ -264,10 +264,10 @@ const Table: React.FunctionComponent<Props> = (props) => {
             {listToDisplay.map((obj, index) => {
             // prepare actions list
             const enabledActionsBool = enabledActionsList(obj, props.actions, props.itemIDselector)
-            const allowedActions = props.actions?.filter((v,i)=> enabledActionsBool[i])
+            const allowedActions = props.actions?.filter((_,i)=> enabledActionsBool[i])
             // prepare individualActions list
             const enabledIndivActionsBool = enabledActionsList(obj, props.individualActions, props.itemIDselector)
-            const allowedIndivActions = props.individualActions?.filter((v,i)=> enabledIndivActionsBool[i])
+            const allowedIndivActions = props.individualActions?.filter((_,i)=> enabledIndivActionsBool[i])
 
             return (
               <tr key={index} className={`react-data-table-row ${props.tableRowClass || ""}`}>
