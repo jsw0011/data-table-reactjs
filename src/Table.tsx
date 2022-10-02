@@ -289,10 +289,9 @@ const Table: React.FunctionComponent<Props> = (props) => {
                   {(!!allowedActions?.length || !!allowedIndivActions?.length) && (
                     <div className="react-data-table-actions-wrap" >
                       {allowedActions && allowedActions.map((item) => (
-                        <div className="react-data-table-action" >
+                        <div className="react-data-table-action" key={item.key}>
                           <button
                             onClick={() => item.handler(index, obj)}
-                            key={item.key}
                             role="button"
                             className={`c-pointer action-button ${item.className || ""} ${props.actionsClass || ""}`}
                           >
