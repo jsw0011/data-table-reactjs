@@ -3,10 +3,11 @@ export interface Actions {
   label?: string;
   handler: Function;
   className?: string;
+  enabled?: ActionEnabled; // function accepts item ID if itemIDselector is passed
 }
 
 
-export type IndividualActionEnable = (itemID: any) => boolean
+export type ActionEnabled = (itemID: any) => boolean
 
 export interface IndividualActionsProps {
   individualActions?: Array<IndividualActions>;
@@ -18,7 +19,7 @@ export interface IndividualActionsProps {
 
 export interface IndividualActions {
   key: string;
-  enabled?: IndividualActionEnable; // function accepts item ID if itemIDselector is passed
+  enabled?: ActionEnabled; // function accepts item ID if itemIDselector is passed
   label?: string;
   handler: Function;
   className?: string;

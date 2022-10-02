@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { ChangeEvent, useEffect, useState } from "react";
-import Props, { IndividualActionsProps, ListItem } from "./types";
+import Props, { Actions, IndividualActions, IndividualActionsProps, ListItem } from "./types";
 import "./table.css";
 import { funnelIcon, sortUpIcon, sortDownIcon } from "./icon";
 import { export2File, filterList, sortList } from "./tabel.helper";
@@ -33,30 +33,21 @@ const MenuIcon = () => (
 </svg>
 )
 
-const IndividualActions: React.FunctionComponent<IndividualActionsProps> = (props) => {
+const IndividualActionsComp: React.FunctionComponent<IndividualActionsProps> = (props) => {
   // const [displayActions, setDisplayActions] = useState(false);
 
-  const enabledList: Array<boolean> = props.individualActions ? props.individualActions
-  .map(e => e.enabled === undefined ? true : (
-    e.enabled(props.itemIDselector ? props.obj[props.itemIDselector] : null
-      )
-    )
-  ) 
-  : []
-
   return (
-    <td className={`react-data-table-individual-action-cell react-data-table-cell ${props.tableCellClass || ""}`}>
       <div className={"react-data-table-individual-action"}>
       
-      {enabledList?.filter(i=>i===true).length > 0 && <Menu 
-      menuButton={<MenuButton 
-              className="react-data-table-menu-button btn btn-link"
-            ><MenuIcon />
-          </MenuButton>} 
+      {!!props.individualActions?.length &&
+      <Menu 
+        menuButton={<MenuButton 
+        className="react-data-table-menu-button btn btn-link"
+        ><MenuIcon />
+        </MenuButton>} 
       transition
-      >      
+      >     
             {props.individualActions?.map((individualAction, i) => (
-                enabledList[i] && (
                     <MenuItem
                     className="list-wrap-individual-action"
                     key={i+"event"}
@@ -64,13 +55,20 @@ const IndividualActions: React.FunctionComponent<IndividualActionsProps> = (prop
                     >
                       {individualAction.label}
                     </MenuItem>
-                )
             ))}
           </Menu>}
       </div>
-    </td>
   )
 }
+
+const enabledActionsList = (obj: ListItem, actions?: Array<Actions|IndividualActions>, itemIDselector?: string) => actions ? actions
+.map(e => e.enabled === undefined ? true : (
+  e.enabled(itemIDselector ? obj[itemIDselector] : null
+    )
+  )
+) 
+: []
+
 
 
 
@@ -146,6 +144,8 @@ const Table: React.FunctionComponent<Props> = (props) => {
   }, [pageNumber, pageSize, list]);
 
   let startPage = 1;
+
+
   return (
     <div className={`react-data-table-component-container ${props.containerClass || ""}`}>
       {(props.showDownloadOption || props.title) && (
@@ -255,16 +255,21 @@ const Table: React.FunctionComponent<Props> = (props) => {
                   )}
                 </th>
               ))}
-              {!!props.actions?.length && (
+              {(!!props.actions?.length || !!props.individualActions?.length) && (
                 <th className={`react-data-table-header-cell ${props.headerCellClass || ""}`}>Actions</th>
-              )}
-              {!!props.individualActions?.length && (
-                  <th className={`react-data-table-header-cell ${props.headerCellClass || ""}`}></th>
               )}
             </tr>
           </thead>
           <tbody className={`react-data-table-body ${props.tableBodyClassName || ""}`}>
-            {listToDisplay.map((obj, index) => (
+            {listToDisplay.map((obj, index) => {
+            // prepare actions list
+            const enabledActionsBool = enabledActionsList(obj, props.actions, props.itemIDselector)
+            const allowedActions = props.actions?.filter((v,i)=> enabledActionsBool[i])
+            // prepare individualActions list
+            const enabledIndivActionsBool = enabledActionsList(obj, props.individualActions, props.itemIDselector)
+            const allowedIndivActions = props.individualActions?.filter((v,i)=> enabledIndivActionsBool[i])
+
+            return (
               <tr key={index} className={`react-data-table-row ${props.tableRowClass || ""}`}>
                 {props.showSerialNumber && (
                   <td className={`react-data-table-cell ${props.tableCellClass || ""}`} style={{ width: "50px" }}>
@@ -280,29 +285,33 @@ const Table: React.FunctionComponent<Props> = (props) => {
                     {obj[item.selector]}
                   </td>
                 ))}
-                {props.actions && (
-                  <td className={`react-data-table-action-cell react-data-table-cell ${props.tableCellClass || ""}`}>
-                    {props.actions.map((item) => (
-                      <a
-                        onClick={() => item.handler(index, obj)}
-                        key={item.key}
-                        role="button"
-                        className={`c-pointer ${item.className || ""} ${props.actionsClass || ""}`}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </td>
-                )}
-                 <IndividualActions 
-                  obj={obj} // items
-                  index={index} 
-                  individualActions={props.individualActions} 
-                  tableCellClass={props.tableCellClass}
-                  itemIDselector={props.itemIDselector}
-                  />
+                  <td className={`react-data-table-action-cell react-data-table-cell ${(!(!!allowedActions?.length || !!allowedIndivActions?.length)) ? "no-action" : ""} ${props.tableCellClass || ""}`}>
+                  {(!!allowedActions?.length || !!allowedIndivActions?.length) && (
+                    <div className="react-data-table-actions-wrap" >
+                      {allowedActions && allowedActions.map((item) => (
+                        <div className="react-data-table-action" >
+                          <button
+                            onClick={() => item.handler(index, obj)}
+                            key={item.key}
+                            role="button"
+                            className={`c-pointer action-button ${item.className || ""} ${props.actionsClass || ""}`}
+                          >
+                            {item.label}
+                          </button>
+                        </div>
+                      ))}
+                      <IndividualActionsComp 
+                      obj={obj} // items
+                      index={index} 
+                      individualActions={allowedIndivActions} 
+                      tableCellClass={props.tableCellClass}
+                      />
+                      </div>
+                  )}
+                </td>
               </tr>
-            ))}
+            )}
+            )}
           </tbody>
         </table>
       </div>

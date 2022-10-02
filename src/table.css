@@ -154,12 +154,40 @@
 
 .react-data-table-cell.react-data-table-action-cell {
   min-width: 5rem;
-  width: max-content;
+}
+
+.react-data-table-actions-wrap {
+  display: inline-flex;
+  /* width: 100%; */
+}
+
+.react-data-table-action {
+  display: flex;
+  padding-right: .2rem;
+  padding-left: .2rem;
+}
+
+.react-data-table-action > .action-button {
+  margin: 0;
+  padding: .1rem;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+}
+
+.react-data-table-action > .action-button:hover {
+  text-decoration: none;
 }
 
 .react-data-table-individual-action .show-actions {
   font-size: 1.7rem;
   font-weight: 400;
+}
+
+.react-data-table-individual-action {
+  min-width: 3.2rem;
 }
 
 /* .react-data-table-individual-action-list {
@@ -257,4 +285,8 @@
 
 .t-underLine {
   text-decoration: underline;
+}
+
+.react-data-table-cell.react-data-table-action-cell.no-action {
+  width: 100%;
 }
