@@ -146,6 +146,15 @@ const Table: React.FunctionComponent<Props> = (props) => {
   let startPage = 1;
 
 
+  let actionsMinWidth = 0;
+  if(!!props.actions?.length) {
+    actionsMinWidth += props.actions.length * 6
+  }
+
+    if(!!props.individualActions?.length) {
+    actionsMinWidth += 5
+  }
+
   return (
     <div className={`react-data-table-component-container ${props.containerClass || ""}`}>
       {(props.showDownloadOption || props.title) && (
@@ -256,7 +265,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
                 </th>
               ))}
               {(!!props.actions?.length || !!props.individualActions?.length) && (
-                <th className={`react-data-table-header-cell ${props.headerCellClass || ""}`}>Actions</th>
+                <th className={`react-data-table-header-cell ${props.headerCellClass || ""}`} style={{"minWidth": `${actionsMinWidth}rem`}}>Actions</th>
               )}
             </tr>
           </thead>
