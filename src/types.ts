@@ -3,23 +3,22 @@ export interface Actions {
   label?: string;
   handler: Function;
   className?: string;
-  enabled?: ActionEnabled; // function accepts item ID if itemIDselector is passed
+  enabled?: ActionEnabled; // function accepts item data
 }
 
 
-export type ActionEnabled = (itemID: any) => boolean
+export type ActionEnabled = (item: ListItem) => boolean
 
 export interface IndividualActionsProps {
   individualActions?: Array<IndividualActions>;
   obj: ListItem;
   tableCellClass?: string;
-  itemIDselector?: string;
   index: number;
 }
 
 export interface IndividualActions {
   key: string;
-  enabled?: ActionEnabled; // function accepts item ID if itemIDselector is passed
+  enabled?: ActionEnabled; // function accepts item data
   label?: string;
   handler: Function;
   className?: string;
@@ -68,5 +67,4 @@ export default interface Props {
   showSerialNumber?: boolean;
   showDownloadOption?: boolean;
   showPageStats?: boolean;
-  itemIDselector?: string
 }

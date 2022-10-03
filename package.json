@@ -1,5 +1,5 @@
 {
-  "version": "0.1.93",
+  "version": "0.1.94",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -57,7 +57,7 @@
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.11.0",
+    "@size-limit/preset-small-lib": "^8.1.0",
     "@types/react": "^17.0.36",
     "@types/react-dom": "^17.0.5",
     "husky": "^6.0.0",
@@ -72,6 +72,7 @@
   },
   "dependencies": {
     "@szhsin/react-menu": "^3.2.0",
+    "@types/lodash": "^4.14.186",
     "lodash": "^4.17.21"
   }
 }

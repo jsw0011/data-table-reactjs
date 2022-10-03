@@ -34,7 +34,6 @@ const MenuIcon = () => (
 )
 
 const IndividualActionsComp: React.FunctionComponent<IndividualActionsProps> = (props) => {
-  // const [displayActions, setDisplayActions] = useState(false);
 
   return (
       <div className={"react-data-table-individual-action"}>
@@ -61,13 +60,14 @@ const IndividualActionsComp: React.FunctionComponent<IndividualActionsProps> = (
   )
 }
 
-const enabledActionsList = (obj: ListItem, actions?: Array<Actions|IndividualActions>, itemIDselector?: string) => actions ? actions
-.map(e => e.enabled === undefined ? true : (
-  e.enabled(itemIDselector ? obj[itemIDselector] : null
-    )
-  )
-) 
-: []
+const enabledActionsList = (obj: ListItem, actions?: Array<Actions|IndividualActions>) => {
+  if(actions)
+  {
+    return actions
+          .map(e => e.enabled === undefined ? true : e.enabled(obj)) 
+  }
+  return []
+}
 
 
 
@@ -263,10 +263,10 @@ const Table: React.FunctionComponent<Props> = (props) => {
           <tbody className={`react-data-table-body ${props.tableBodyClassName || ""}`}>
             {listToDisplay.map((obj, index) => {
             // prepare actions list
-            const enabledActionsBool = enabledActionsList(obj, props.actions, props.itemIDselector)
+            const enabledActionsBool = enabledActionsList(obj, props.actions)
             const allowedActions = props.actions?.filter((_,i)=> enabledActionsBool[i])
             // prepare individualActions list
-            const enabledIndivActionsBool = enabledActionsList(obj, props.individualActions, props.itemIDselector)
+            const enabledIndivActionsBool = enabledActionsList(obj, props.individualActions)
             const allowedIndivActions = props.individualActions?.filter((_,i)=> enabledIndivActionsBool[i])
 
             return (
