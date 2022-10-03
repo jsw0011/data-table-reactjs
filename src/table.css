@@ -22,7 +22,7 @@
 .react-data-table-body {
   display: block;
   max-height: 80vh;
-  overflow-y: scroll;
+  overflow-y: visible;
   overflow-x: hidden;
 }
 
