@@ -180,7 +180,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
           </div>
         </div>
       )}
-      <div className={`react-data-table-wrapper ${props.tableWapperClass || ""}`}>
+      <div className={`react-data-table-wrapper ${props.tableWrapperClass || ""}`}>
         <table className={`react-data-table ${props.tableClass || ""}`}>
           <thead>
             <tr className={`react-data-table-header ${props.headerRowClass || ""}`}>

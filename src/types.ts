@@ -47,7 +47,7 @@ export default interface Props {
   downloadDropDownContainerClass?: string;
   downloadDropDownClass?: string;
   tableClass?: string;
-  tableWapperClass?: string;
+  tableWrapperClass?: string;
   headerRowClass?: string;
   headerCellClass?: string;
   headerIconContainerClass?: string;
