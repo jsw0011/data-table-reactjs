@@ -34,6 +34,9 @@ export interface Column {
 export interface ListItem {
   [key: string]: any;
 }
+
+export interface sortByInterface { name: string; type: string }
+
 export default interface Props {
   columns: Array<Column>;
   list: Array<ListItem>;
@@ -67,4 +70,6 @@ export default interface Props {
   showSerialNumber?: boolean;
   showDownloadOption?: boolean;
   showPageStats?: boolean;
+  sortBy?: sortByInterface;
+  filterBy?: ListItem;
 }

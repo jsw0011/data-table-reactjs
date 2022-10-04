@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { ChangeEvent, useEffect, useState } from "react";
-import Props, { Actions, IndividualActions, IndividualActionsProps, ListItem } from "./types";
+import Props, { Actions, IndividualActions, IndividualActionsProps, ListItem, sortByInterface } from "./types";
 import "./table.css";
 import { funnelIcon, sortUpIcon, sortDownIcon } from "./icon";
 import { export2File, filterList, sortList } from "./tabel.helper";
@@ -77,7 +77,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [list, setList] = useState([...props.list]);
   const [listToDisplay, setListToDispaly] = useState([...list]);
-  const [sortBy, setSortBy] = useState<{ name: string; type: string }>({
+  const [sortBy, setSortBy] = useState<sortByInterface>({
     name: "",
     type: "",
   });
@@ -130,11 +130,43 @@ const Table: React.FunctionComponent<Props> = (props) => {
   };
 
   useEffect(() => {
+    let currentList = [...list]
+    let currentSortBy = sortBy
+    let resetPage = false
     // check for changes in input props 
-    if (!_.isEqual(props.list, list)) { // TODO: optimize comparison
-      setList([...props.list])
+    if (!_.isEqual(props.list, currentList)) { // TODO: optimize comparison
+      currentList = [...props.list]
     }
-  },[props.list]
+
+    // SORT
+    if(props.sortBy && !_.isEqual(props.sortBy, sortBy))
+    {
+      currentList = sortList(list, props.sortBy.name, props.sortBy.type);
+      currentSortBy = { name: props.sortBy.name, type: props.sortBy.type };
+      resetPage = true
+    } else {
+      currentList = sortList(list, currentSortBy.name, currentSortBy.type);
+    } 
+
+    // FILTER
+    if(props.filterBy && !_.isEqual(props.filterBy,filterBy))
+    {
+      const newFilterBy = {...filterBy, ...props.filterBy}
+      currentList = filterList(currentList,newFilterBy, currentSortBy)
+      setFilterBy(newFilterBy)
+      resetPage = true
+    }else {
+      currentList = filterList(currentList,filterBy, currentSortBy)
+    }
+
+    setSortBy(currentSortBy)
+    setList([...currentList])
+    if(resetPage)
+    {
+      setPageNumber(1);
+    }
+
+  },[props.list,props.sortBy,props.filterBy]
   )
 
   useEffect(() => {
