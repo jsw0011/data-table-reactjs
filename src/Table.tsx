@@ -151,9 +151,9 @@ const Table: React.FunctionComponent<Props> = (props) => {
     // FILTER
     if(props.filterBy && !_.isEqual(props.filterBy,filterBy))
     {
-      const newFilterBy = {...filterBy, ...props.filterBy}
-      currentList = filterList(currentList,newFilterBy, currentSortBy)
-      setFilterBy(newFilterBy)
+      let currentFilterBy = {...filterBy, ...props.filterBy}
+      currentList = filterList(currentList,currentFilterBy, currentSortBy)
+      setFilterBy(currentFilterBy)
       resetPage = true
     }else {
       currentList = filterList(currentList,filterBy, currentSortBy)
@@ -166,7 +166,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
       setPageNumber(1);
     }
 
-  },[props.list,props.sortBy,props.filterBy]
+  },[props.handlerForSchanged,props.list,props.sortBy,props.filterBy]
   )
 
   useEffect(() => {
@@ -174,6 +174,10 @@ const Table: React.FunctionComponent<Props> = (props) => {
     setListInState(currentList);
     
   }, [pageNumber, pageSize, list]);
+
+  useEffect( () => {
+    if (props.handlerForSchanged !== undefined && props.handlerForSchanged instanceof Function) {props.handlerForSchanged(sortBy, filterBy)}
+  }, [sortBy, filterBy])
 
   let startPage = 1;
 

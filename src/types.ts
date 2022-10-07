@@ -36,7 +36,7 @@ export interface ListItem {
 }
 
 export interface sortByInterface { name: string; type: string }
-
+export interface filterByInterface { [key: string]: string }
 export default interface Props {
   columns: Array<Column>;
   list: Array<ListItem>;
@@ -72,4 +72,5 @@ export default interface Props {
   showPageStats?: boolean;
   sortBy?: sortByInterface;
   filterBy?: ListItem;
+  handlerForSchanged?(sortBy: sortByInterface, filterBy: filterByInterface): void; // Pass function which will be called on change of "sort by" or "filter by"
 }
