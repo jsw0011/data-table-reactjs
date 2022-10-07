@@ -134,6 +134,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
     let currentSortBy = sortBy
     let resetPage = false
     // check for changes in input props 
+    console.log('isequal -> currentList', !_.isEqual(props.list, currentList))
     if (!_.isEqual(props.list, currentList)) { // TODO: optimize comparison
       currentList = [...props.list]
     }
@@ -141,11 +142,11 @@ const Table: React.FunctionComponent<Props> = (props) => {
     // SORT
     if(props.sortBy && !_.isEqual(props.sortBy, sortBy))
     {
-      currentList = sortList(list, props.sortBy.name, props.sortBy.type);
+      currentList = sortList(currentList, props.sortBy.name, props.sortBy.type);
       currentSortBy = { name: props.sortBy.name, type: props.sortBy.type };
       resetPage = true
     } else {
-      currentList = sortList(list, currentSortBy.name, currentSortBy.type);
+      currentList = sortList(currentList, currentSortBy.name, currentSortBy.type);
     } 
 
     // FILTER
@@ -161,6 +162,7 @@ const Table: React.FunctionComponent<Props> = (props) => {
 
     setSortBy(currentSortBy)
     setList([...currentList])
+    console.log('currentList', currentList,props.list)
     if(resetPage)
     {
       setPageNumber(1);
